@@ -1,0 +1,4 @@
+sceneSetups:
+- path: Assets/mode-fury.unity
+  isLoaded: 1
+  isActive: 1
