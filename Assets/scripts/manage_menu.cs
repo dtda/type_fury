@@ -5,8 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class manage_menu : MonoBehaviour {
 
-	private Animator anim_game;
-	private Animator anim_menu;
+	//private Animator anim_game;
+	//private Animator anim_menu;
 	private GameObject the_game;
 	private RectTransform canvas_start;
 	private RectTransform canvas_game;
@@ -18,11 +18,12 @@ public class manage_menu : MonoBehaviour {
 	private float lerpTime = 5.0f;
 	private float currentLerpTime = 1.0f;
 	private float perc = 1;
+	private bool etatMusic = true;
 
 	// Use this for initialization
 	void Start () {
-		anim_game = GameObject.Find ("Canvas_game").GetComponent<Animator>();
-		anim_menu = GameObject.Find ("Canvas_menu").GetComponent<Animator>();
+		//anim_game = GameObject.Find ("Canvas_game").GetComponent<Animator>();
+		//anim_menu = GameObject.Find ("Canvas_menu").GetComponent<Animator>();
 		the_game = GameObject.Find ("the_game");
 		canvas_start = GameObject.Find ("Canvas_start").GetComponent<RectTransform>();
 		canvas_game = GameObject.Find ("Canvas_game").GetComponent<RectTransform>();
@@ -107,6 +108,21 @@ public class manage_menu : MonoBehaviour {
 			}
 			GameObject.Find ("Generate_letter").GetComponent<generate_letter> ().pause = false;
 			GameObject.Find ("Kill_letter").GetComponent<kill_letter> ().pause = false;
+		}
+	}
+
+	public void muteGame () {
+		etatMusic = !etatMusic;
+		if (etatMusic) {
+			GameObject.Find ("as_music(Clone)").GetComponent<AudioSource> ().mute = false;
+			GameObject.Find ("Kill_letter").GetComponent<kill_letter> ().as_error.mute = false;
+			GameObject.Find ("Kill_letter").GetComponent<kill_letter> ().as_fail.mute = false;
+			GameObject.Find ("Kill_letter").GetComponent<kill_letter> ().as_good.mute = false;
+		} else {
+			GameObject.Find ("as_music(Clone)").GetComponent<AudioSource> ().mute = true;
+			GameObject.Find ("Kill_letter").GetComponent<kill_letter> ().as_error.mute = true;
+			GameObject.Find ("Kill_letter").GetComponent<kill_letter> ().as_fail.mute = true;
+			GameObject.Find ("Kill_letter").GetComponent<kill_letter> ().as_good.mute = true;
 		}
 	}
 }

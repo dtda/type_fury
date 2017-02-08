@@ -20,17 +20,17 @@ public class generate_letter : MonoBehaviour {
 	public GameObject objet;
 	public ArrayList lettres = new ArrayList();
 
-	Camera camera;
+	Camera main_camera;
 	GameObject the_game;
 	Text txt_niveau;
 
 	// Use this for initialization
 	void Start () {
-		camera = GameObject.Find("Main Camera").GetComponent<Camera>();
+		main_camera = GameObject.Find("Main Camera").GetComponent<Camera>();
 		the_game = GameObject.Find("the_game");
 		txt_niveau = GameObject.Find("Niveau").GetComponent<Text>();
 		txt_niveau.text = niveau.ToString ();
-		camera.backgroundColor = background;
+		main_camera.backgroundColor = background;
 	}
 	
 	// Update is called once per frame
@@ -54,7 +54,7 @@ public class generate_letter : MonoBehaviour {
 
 			if (t < 1.0f) {
 				t += 0.001f;
-				camera.backgroundColor = Color32.Lerp (camera.backgroundColor, background, t);
+				main_camera.backgroundColor = Color32.Lerp (main_camera.backgroundColor, background, t);
 			}
 		}
 	}

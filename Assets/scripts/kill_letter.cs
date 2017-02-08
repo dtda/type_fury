@@ -10,9 +10,15 @@ public class kill_letter : MonoBehaviour {
 
 	private int points = 0;
 	private int erreurs = 0;
+	private int erreurs_max = 6;
 
 	public bool pause = true;
 	public ParticleSystem explosion;
+	public AudioSource as_music;
+	public AudioSource as_good;
+	public AudioSource as_fail;
+	public AudioSource as_error;
+
 	Text txt_score;
 	Animator heart1;
 	Animator heart2;
@@ -29,6 +35,8 @@ public class kill_letter : MonoBehaviour {
 		heart3 = GameObject.Find("heart3").GetComponent<Animator>();
 		heart4 = GameObject.Find("heart4").GetComponent<Animator>();
 		heart5 = GameObject.Find("heart5").GetComponent<Animator>();
+
+		Instantiate (as_music, Vector3.zero, Quaternion.identity);
 	}
 	
 	// Update is called once per frame
@@ -50,6 +58,10 @@ public class kill_letter : MonoBehaviour {
 						array_letter [0].GetComponent<BoxCollider2D> ().enabled = false;
 						array_letter [0].GetComponent<Animator>().Play("letter_touch");
 						array_letter [0].tag = "Untagged";
+
+						var fx_good = Instantiate (as_good, array_letter [0].transform.position, array_letter [0].transform.rotation);
+						Destroy(fx_good.gameObject, 1.0f);
+
 						Destroy (array_letter [0], 0.30f);
 						delete_lettre ();
 						lettre_reussie ();
@@ -58,6 +70,9 @@ public class kill_letter : MonoBehaviour {
 				} else {
 					if (!Input.GetKeyDown(KeyCode.LeftApple) && !Input.GetKeyDown(KeyCode.RightApple) && !Input.GetKeyDown(KeyCode.LeftAlt) && !Input.GetKeyDown(KeyCode.RightAlt) && !Input.GetKeyDown(KeyCode.LeftShift) && !Input.GetKeyDown(KeyCode.RightShift) && !Input.GetMouseButtonDown (0) && !Input.GetMouseButtonDown (1) && !Input.GetMouseButtonDown (2)) {
 						lettre_ratee ();
+
+						var fx_error = Instantiate (as_error, Vector3.zero, Quaternion.identity);
+						Destroy(fx_error.gameObject, 1.0f);
 					}
 				}
 			}
@@ -73,9 +88,14 @@ public class kill_letter : MonoBehaviour {
 			delete_lettre();
 			lettre_ratee();
 			Destroy(other.gameObject, 0.0f);
+
 			var boum = Instantiate (explosion, other.transform.position, other.transform.rotation);
 			boum.transform.SetParent (GameObject.Find("the_game").transform);
 			Destroy(boum.gameObject, 1.0f);
+
+			var fx_fail = Instantiate (as_fail, Vector3.zero, Quaternion.identity);
+			Destroy(fx_fail.gameObject, 1.0f);
+
 			//other.GetComponent<Renderer> ().material.color = new Color (1.0f, 1.0f, 1.0f, 0.0f);
 			//SceneManager.LoadScene(SceneManager.GetSceneAt(0).name);
 		}
@@ -88,6 +108,7 @@ public class kill_letter : MonoBehaviour {
 	private void lettre_ratee(){
 		erreurs += 1;
 		points -= 10;
+
 		switch (erreurs) {
 		case 1:
 			heart1.Play ("heart_full");
@@ -105,7 +126,8 @@ public class kill_letter : MonoBehaviour {
 			heart5.Play("heart_full");
 			break;
 		}
-		if(erreurs >= 6){
+
+		if(erreurs >= erreurs_max){
 			gameOver ();
 		}
 	}
@@ -116,6 +138,6 @@ public class kill_letter : MonoBehaviour {
 
 	private void gameOver(){
 		GameObject.Find ("_manage").GetComponent<manage_menu> ().goToMenu("end_open");
-		GameObject.Find("Score_end").GetComponent<Text>().text = "score : " + points;
+		GameObject.Find("Score_end").GetComponent<Text>().text = points.ToString();
 	}
 }
