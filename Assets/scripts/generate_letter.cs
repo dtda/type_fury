@@ -13,8 +13,10 @@ public class generate_letter : MonoBehaviour {
 	private GameObject new_letter;
 	private int niveau = 1;
 	private int nbr_lettre = 0;
-	private Color background = new Color32(255, 110, 153, 255);
 	private float t = 1.0f;
+
+	private Color background;
+	public Color background_start = new Color32(255, 110, 153, 255);
 
 	public bool pause = true;
 	public GameObject objet;
@@ -30,7 +32,8 @@ public class generate_letter : MonoBehaviour {
 		the_game = GameObject.Find("the_game");
 		txt_niveau = GameObject.Find("Niveau").GetComponent<Text>();
 		txt_niveau.text = niveau.ToString ();
-		main_camera.backgroundColor = background;
+		main_camera.backgroundColor = background_start;
+		background = background_start;
 	}
 	
 	// Update is called once per frame

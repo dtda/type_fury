@@ -1,10 +1,11 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\kill_letter.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\generate_letter.cs">
     <Files>
-      <File FileName="Assets\scripts\kill_letter.cs" Line="122" Column="28" />
-      <File FileName="Assets\scripts\generate_letter.cs" Line="57" Column="60" />
-      <File FileName="Assets\scripts\manage_menu.cs" Line="25" Column="5" />
+      <File FileName="Assets\scripts\kill_letter.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\generate_letter.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\manage_menu.cs" Line="46" Column="3" />
+      <File FileName="Assets\scripts\manage_menu_principal.cs" Line="19" Column="32" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

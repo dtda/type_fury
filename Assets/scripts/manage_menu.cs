@@ -1,7 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class manage_menu : MonoBehaviour {
 
@@ -14,11 +18,14 @@ public class manage_menu : MonoBehaviour {
 	private RectTransform canvas_end;
 
 	private GameObject[] lettres_actives;
-	private string condition_menu;
+	public string condition_menu;
 	private float lerpTime = 5.0f;
 	private float currentLerpTime = 1.0f;
 	private float perc = 1;
 	private bool etatMusic = true;
+
+	private BinaryFormatter bf;
+	private FileStream file;
 
 	// Use this for initialization
 	void Start () {
@@ -31,6 +38,14 @@ public class manage_menu : MonoBehaviour {
 		canvas_end = GameObject.Find ("Canvas_end").GetComponent<RectTransform>();
 
 		pauseGame (true);
+	}
+
+	void Awake () {
+		loadOptions ();
+
+		string url = "http://type-fury.com/scores/data.json";
+		WWW www = new WWW(url);
+		StartCoroutine(WaitForRequest(www));
 	}
 
 	// Update is called once per frame
@@ -123,6 +138,71 @@ public class manage_menu : MonoBehaviour {
 			GameObject.Find ("Kill_letter").GetComponent<kill_letter> ().as_error.mute = true;
 			GameObject.Find ("Kill_letter").GetComponent<kill_letter> ().as_fail.mute = true;
 			GameObject.Find ("Kill_letter").GetComponent<kill_letter> ().as_good.mute = true;
+		}
+	}
+
+	public void loadOptions () {
+		if (File.Exists (Application.persistentDataPath + "/optionsInfo.dat")) {
+			bf = new BinaryFormatter ();
+			file = File.Open (Application.persistentDataPath + "/optionsInfo.dat", FileMode.Open);
+			optionsData data = (optionsData)bf.Deserialize (file);
+			file.Close ();
+
+			GameObject.Find ("Kill_letter").GetComponent<kill_letter> ().as_music.mute = !data.etatMusic;
+			GameObject.Find ("Kill_letter").GetComponent<kill_letter> ().as_error.mute = !data.etatMusic;
+			GameObject.Find ("Kill_letter").GetComponent<kill_letter> ().as_fail.mute = !data.etatMusic;
+			GameObject.Find ("Kill_letter").GetComponent<kill_letter> ().as_good.mute = !data.etatMusic;
+			etatMusic = data.etatMusic;
+		}
+	}
+
+	public void envoyerScore(){
+		string j_pseudo = GameObject.Find ("field_pseudo").GetComponent<Text> ().text;
+		if(j_pseudo != ""){
+			string j_score = GameObject.Find ("Kill_letter").GetComponent<kill_letter> ().points.ToString();
+			string url = "http://type-fury.com/scores/get_score.php?k=22&pseudo=" + j_pseudo + "&score=" + j_score;
+			new WWW(url);
+
+			GameObject.Find ("text_send").GetComponent<Text> ().text = "SCORE ENVOYE !";
+			GameObject.Find ("Send_end").GetComponent<Button> ().interactable = false;
+			GameObject.Find ("pseudo_end").GetComponent<InputField> ().interactable = false;
+		}
+	}
+
+	IEnumerator WaitForRequest(WWW www) {
+		yield return www;
+
+		// check for errors
+		if (www.error == null) {
+			var myObjectscore = JsonUtility.FromJson<list_scores>(www.text);
+
+			int i = 1;
+			foreach (scores scr in myObjectscore.data) {
+				if(i<=4){
+					switch (i) {
+					case 1:
+						GameObject.Find ("scores_best_pseudo_1").GetComponent<Text> ().text = scr.pseudo;
+						GameObject.Find ("scores_best_nbr_1").GetComponent<Text> ().text = scr.score.ToString();
+						break;
+					case 2:
+						GameObject.Find ("scores_best_pseudo_2").GetComponent<Text> ().text = scr.pseudo;
+						GameObject.Find ("scores_best_nbr_2").GetComponent<Text> ().text = scr.score.ToString();
+						break;
+					case 3:
+						GameObject.Find ("scores_best_pseudo_3").GetComponent<Text> ().text = scr.pseudo;
+						GameObject.Find ("scores_best_nbr_3").GetComponent<Text> ().text = scr.score.ToString();
+						break;
+					case 4:
+						GameObject.Find ("scores_best_pseudo_4").GetComponent<Text> ().text = scr.pseudo;
+						GameObject.Find ("scores_best_nbr_4").GetComponent<Text> ().text = scr.score.ToString();
+						break;
+					}
+					i++;
+				}
+			}
+
+		} else {
+			Debug.Log("WWW Error: "+ www.error);
 		}
 	}
 }

@@ -8,9 +8,9 @@ public class kill_letter : MonoBehaviour {
 
 	private ArrayList lettres = new ArrayList();
 
-	private int points = 0;
+	public int points = 0;
 	private int erreurs = 0;
-	private int erreurs_max = 6;
+	private int erreurs_max = 5;
 
 	public bool pause = true;
 	public ParticleSystem explosion;
@@ -46,21 +46,18 @@ public class kill_letter : MonoBehaviour {
 
 			if (!pause) {
 				lettres = GameObject.Find ("Generate_letter").GetComponent<generate_letter> ().lettres;
-				if (lettres.Count != 0) {
-					Debug.Log (lettres [0]);
-				}
 				
 				if (lettres.Count != 0 && lettres [0].ToString () == Input.inputString) {
 					
 					var array_letter = GameObject.FindGameObjectsWithTag ("letter");
 					if (array_letter.Length != 0) {
-						array_letter [0].GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+						array_letter [0].GetComponent<Rigidbody2D> ().velocity = Vector3.zero;
 						array_letter [0].GetComponent<BoxCollider2D> ().enabled = false;
-						array_letter [0].GetComponent<Animator>().Play("letter_touch");
+						array_letter [0].GetComponent<Animator> ().Play ("letter_touch");
 						array_letter [0].tag = "Untagged";
 
 						var fx_good = Instantiate (as_good, array_letter [0].transform.position, array_letter [0].transform.rotation);
-						Destroy(fx_good.gameObject, 1.0f);
+						Destroy (fx_good.gameObject, 1.0f);
 
 						Destroy (array_letter [0], 0.30f);
 						delete_lettre ();
@@ -68,12 +65,22 @@ public class kill_letter : MonoBehaviour {
 					}
 
 				} else {
-					if (!Input.GetKeyDown(KeyCode.LeftApple) && !Input.GetKeyDown(KeyCode.RightApple) && !Input.GetKeyDown(KeyCode.LeftAlt) && !Input.GetKeyDown(KeyCode.RightAlt) && !Input.GetKeyDown(KeyCode.LeftShift) && !Input.GetKeyDown(KeyCode.RightShift) && !Input.GetMouseButtonDown (0) && !Input.GetMouseButtonDown (1) && !Input.GetMouseButtonDown (2)) {
+					if (!Input.GetKeyDown (KeyCode.Escape) && !Input.GetKeyDown (KeyCode.LeftApple) && !Input.GetKeyDown (KeyCode.RightApple) && !Input.GetKeyDown (KeyCode.LeftAlt) && !Input.GetKeyDown (KeyCode.RightAlt) && !Input.GetKeyDown (KeyCode.LeftShift) && !Input.GetKeyDown (KeyCode.RightShift) && !Input.GetMouseButtonDown (0) && !Input.GetMouseButtonDown (1) && !Input.GetMouseButtonDown (2)) {
 						lettre_ratee ();
 
 						var fx_error = Instantiate (as_error, Vector3.zero, Quaternion.identity);
-						Destroy(fx_error.gameObject, 1.0f);
+						Destroy (fx_error.gameObject, 1.0f);
+					} else {
+						string etat_menu = GameObject.Find ("_manage").GetComponent<manage_menu> ().condition_menu;
+						if (Input.GetKeyDown (KeyCode.Escape) && (etat_menu == "game_open" || etat_menu == "menu_close")) {
+							GameObject.Find ("_manage").GetComponent<manage_menu> ().goToMenu ("menu_open");
+						}
 					}
+				}
+			} else {
+				string etat_menu = GameObject.Find ("_manage").GetComponent<manage_menu> ().condition_menu;
+				if (Input.GetKeyDown (KeyCode.Escape) && etat_menu == "menu_open") {
+					GameObject.Find ("_manage").GetComponent<manage_menu> ().goToMenu ("menu_close");
 				}
 			}
 		}
